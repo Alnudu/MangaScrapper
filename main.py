@@ -1,10 +1,9 @@
 import os
-import sys
 import requests
 from bs4 import BeautifulSoup as bs
 
 ## CONFIGURACION ##
-path_save_dir = "C:\LOL"  # Ejemplo de ruta c:\test
+path_save_dir = "C:\MangaScrapper"  # Ejemplo de ruta c:\test
 ## ARRAYS COMUNES ##
 manga_chapters_links = []
 
@@ -42,7 +41,8 @@ def manga_download(chapter):
     soup = bs(r.content, "html.parser")
     chapter_img = [img["src"] for img in soup.select(".reading-content img")]
     chapter_number = soup.find('h1').text
-    title = soup.select_one('div.entry-header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ol:nth-child(1) > li:nth-child(3) > a:nth-child(1)')
+    title = soup.select_one(
+        'div.entry-header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ol:nth-child(1) > li:nth-child(3) > a:nth-child(1)')
     chapter_title = title.text.strip()
     for img in chapter_img:
         manga_chapters_imgs.extend(chapter_img)
@@ -88,16 +88,19 @@ logo = ''''
 ██║ ╚═╝ ██║██║  ██║██║ ╚████║╚██████╔╝██║  ██║    ███████║╚██████╗██║  ██║██║  ██║██║     ██║     ███████╗██║  ██║
 ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝     ╚══════╝╚═╝  ╚═╝
                                                                                                                   '''''
+
+
 def print_menu():
     print(logo)
     print('| https://www.manhwas.net | SCRAPPER')
     print(
-    30 * "-", "MENU", 30 * "-")
+        30 * "-", "MENU", 30 * "-")
     print("1. Configurar directorio de descargas.")
     print("2. Descargar un capitulo.")
     print("3. Descargar todos los capitulos.")
     print("4. Salir.")
     print(67 * "-")
+
 
 loop = True
 
@@ -121,7 +124,6 @@ while loop:
     elif choice == '4':
         exit()
     else:
-        # Any integer inputs other than values 1-5 we print an error message
         print("Opción no válida, vuelve a intentarlo ..")
 
 if __name__ == "__main__":
