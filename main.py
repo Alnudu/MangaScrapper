@@ -88,7 +88,7 @@ logo = ''''
 ██║ ╚═╝ ██║██║  ██║██║ ╚████║╚██████╔╝██║  ██║    ███████║╚██████╗██║  ██║██║  ██║██║     ██║     ███████╗██║  ██║
 ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝     ╚══════╝╚═╝  ╚═╝
                                                                                                                   '''''
-def print_menu():  ## Your menu design here
+def print_menu():
     print(logo)
     print('| https://www.manhwas.net | SCRAPPER')
     print(
@@ -101,8 +101,8 @@ def print_menu():  ## Your menu design here
 
 loop = True
 
-while loop:  ## While loop which will keep going until loop = False
-    print_menu()  ## Displays menu
+while loop:
+    print_menu()
     choice = input("Introduce tu elección [1-4]: ")
     if choice == '1':
         print(f'Has seleccionado la opción {choice}.')
@@ -122,7 +122,7 @@ while loop:  ## While loop which will keep going until loop = False
         exit()
     else:
         # Any integer inputs other than values 1-5 we print an error message
-        print("Wrong option selection. Enter any key to try again..")
+        print("Opción no válida, vuelve a intentarlo ..")
 
 if __name__ == "__main__":
     print_menu()
