@@ -1,4 +1,5 @@
 import os
+import time
 import requests
 from bs4 import BeautifulSoup as bs
 from alive_progress import alive_bar
@@ -41,14 +42,20 @@ def manga_download(chapter):
     manga_chapters_imgs = []
     url = chapter
     img_number = 1
-    r = requests.get(url)
-    soup = bs(r.content, "html.parser")
-    chapter_img = [img["src"] for img in soup.select(".reading-content img")]
-    chapter_number = soup.find('h1').text
-    title = soup.select_one(
-        'div.entry-header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ol:nth-child(1) > li:nth-child(3) > a:nth-child(1)')
-    chapter_title = title.text.strip()
-    print(f'Iniciando descarga de {chapter_number}')
+    try:
+            r = requests.get(url)
+            soup = bs(r.content, "html.parser")
+            chapter_img = [img["src"] for img in soup.select(".reading-content img")]
+            chapter_number = soup.find('h1').text
+            title = soup.select_one(
+            'div.entry-header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ol:nth-child(1) > li:nth-child(3) > a:nth-child(1)')
+            chapter_title = title.text.strip()
+    except:
+            print ('La url que has introducido no parece correcta, por favor revísalo.')
+            time.sleep(3)
+            return
+    else:
+        print(f'Iniciando descarga de {chapter_number}')
     for img in chapter_img:
        manga_chapters_imgs.extend(chapter_img)
        try:
@@ -65,14 +72,19 @@ def manga_download(chapter):
 
 
 def download_collection(chapter_index):
-    get_manga_links(chapter_index)
-    with alive_bar(len(manga_chapters_links)) as bar:
-     for chapter in manga_chapters_links:
-        manga_download(chapter)
-        bar()
-    manga_chapters_links.clear()
-    print('Se han descargado todos lo capitulos disponibles.')
-    return
+    try:
+        get_manga_links(chapter_index)
+        with alive_bar(len(manga_chapters_links)) as bar:
+            for chapter in manga_chapters_links:
+                manga_download(chapter)
+                bar()
+        manga_chapters_links.clear()
+        print('Se han descargado todos lo capitulos disponibles.')
+        return
+    except:
+        print ('La url que has introducido no parece correcta, por favor revísalo.')
+        time.sleep(3)
+        return
 
 
 def get_manga_links(chapter_index):
@@ -114,7 +126,7 @@ loop = True
 
 while loop:
     print_menu()
-    choice = input("Introduce tu elección [1-4]: ")
+    choice = input("Introduce tu elección [1-5]: ")
     if choice == '1':
         print(f'Has seleccionado la opción {choice}.')
         print('Introduce tu ruta de descargas\nEjemplo C:\Descargas\Manga\ ')
