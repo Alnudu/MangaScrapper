@@ -1,10 +1,11 @@
 # MangaScrapper
-
-Utilidad para descargar mangas de forma masiva escrita en python.
- ### Instalación
+Utilidad para descargar manga de forma masiva haciendo web scraping
+ ### Como Instalar ###
 Necesario tener instalado python sea cual sea tu sistema operativo.  
-Instalamos las librerias utilizadas poniendo en CMD/ Terminal.
+Abrimos CMD en windows o terminal en linux.
 >pip install -r requirements.txt
 > 
-Tras instalar as librerias requeridas solo queda ejecutar el scrap
->python3 main.py  
+Luego ejecutamos el script.
+>python3 main.py
+
+Las descargas se realizarán por defecto en C:\MangaScrapper\ .
