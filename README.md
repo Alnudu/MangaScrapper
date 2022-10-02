@@ -1,6 +1,6 @@
 # MangaScrapper
 Utilidad para descargar manga de forma masiva haciendo web scraping
- ### Como Instalar ###
+ ### :point_right: Como Instalar ###
 Necesario tener instalado python sea cual sea tu sistema operativo.  
 Abrimos CMD en windows o terminal en linux.
 >pip install -r requirements.txt
