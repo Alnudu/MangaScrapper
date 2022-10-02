@@ -1,5 +1,4 @@
 import os
-
 import requests
 from bs4 import BeautifulSoup as bs
 
@@ -31,6 +30,7 @@ def manga_site_scan():
         print(page)
     for element in all_manga_titles:
         all_manga.append(element.strip())
+
     return
 
 
@@ -45,17 +45,18 @@ def manga_download(chapter):
     title = soup.select_one(
         'div.entry-header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ol:nth-child(1) > li:nth-child(3) > a:nth-child(1)')
     chapter_title = title.text.strip()
+    print(f'Iniciando descarga de {chapter_number}')
     for img in chapter_img:
         manga_chapters_imgs.extend(chapter_img)
-        try:
-            os.makedirs(f'{path_save_dir}\{chapter_title}\{chapter_number}')
-        except FileExistsError:
-            pass
-        f = open(f'{path_save_dir}\{chapter_title}\{chapter_number}\{img_number}.jpg', 'wb')
-        print(f'Descargando página {img_number} ...')
-        img_number = img_number + 1
-        f.write(requests.get(img).content)
-        f.close()
+    try:
+        os.makedirs(f'{path_save_dir}\{chapter_title}\{chapter_number}')
+    except FileExistsError:
+        pass
+    f = open(f'{path_save_dir}\{chapter_title}\{chapter_number}\{img_number}.jpg', 'wb')
+    print(f'Descargando página {img_number} ...')
+    img_number = img_number + 1
+    f.write(requests.get(img).content)
+    f.close()
     print(f'Capitulo {chapter_number} descargado .')
     return
 
@@ -80,7 +81,6 @@ def get_manga_links(chapter_index):
     return
 
 
-## Interfaz ##
 logo = ''''                                                                                                                                                                                                                                                                      
 ███╗   ███╗ █████╗ ███╗   ██╗ ██████╗  █████╗     ███████╗ ██████╗██████╗  █████╗ ██████╗ ██████╗ ███████╗██████╗ 
 ████╗ ████║██╔══██╗████╗  ██║██╔════╝ ██╔══██╗    ██╔════╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗
@@ -94,9 +94,10 @@ logo = ''''
 def print_menu():
     print(logo)
     print('| https://www.manhwas.net | SCRAPPER')
+    print(f'| Directorio de descargas | {path_save_dir}')
     print(
         30 * "-", "MENU", 30 * "-")
-    print("1. Configurar directorio de descargas.")
+    print("1. Modificar directorio de descargas.")
     print("2. Descargar un capitulo.")
     print("3. Descargar todos los capitulos.")
     print("4. Salir.")
@@ -110,15 +111,19 @@ while loop:
     choice = input("Introduce tu elección [1-4]: ")
     if choice == '1':
         print(f'Has seleccionado la opción {choice}.')
-        print('Introduce tu dirección de descarga\nEjemplo c:\Descargas ')
+        print('Introduce tu ruta de descargas\nEjemplo C:\Descargas\Manga\ ')
         path_save_dir = input()
     elif choice == '2':
         print(f'Has seleccionado la opción {choice}.')
+        print('Elige un capítulo manga de https://www.manhwas.net/ e introduce el enlace')
+        print('Ejemplo "https://www.manhwas.net/leer/one-piece-1045.00"')
         print('Introduce la dirección URL del capítulo del manga:')
         chapter = input('URL ->')
         manga_download(chapter)
     elif choice == '3':
         print(f'Has seleccionado la opción {choice}.')
+        print('Elige un manga de https://www.manhwas.net/ e introduce el enlace')
+        print('Ejemplo "https://www.manhwas.net/manga/one-piece"')
         print('Introduce la dirección URL del manga:')
         chapter_index = input('URL ->')
         download_collection(chapter_index)
