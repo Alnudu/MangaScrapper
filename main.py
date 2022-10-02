@@ -2,9 +2,11 @@ import os
 import requests
 from bs4 import BeautifulSoup as bs
 from alive_progress import alive_bar
+import webbrowser
 
 ## CONFIGURACION ##
-path_save_dir = "C:\MangaScrapper"  # Ejemplo de ruta c:\test
+path_save_dir = "C:\MangaScrapper"
+open_browser = True
 ## ARRAYS COMUNES ##
 manga_chapters_links = []
 
@@ -97,12 +99,14 @@ def print_menu():
     print(logo)
     print('| https://www.manhwas.net | SCRAPPER')
     print(f'| Directorio de descargas | {path_save_dir}')
+    print(f'| Navegador URL | {open_browser}')
     print(
         30 * "-", "MENU", 30 * "-")
     print("1. Modificar directorio de descargas.")
     print("2. Descargar un capitulo.")
     print("3. Descargar todos los capitulos.")
-    print("4. Salir.")
+    print("4. Desactivar / Activar navegador URL.")
+    print("5. Salir.")
     print(67 * "-")
 
 
@@ -120,6 +124,8 @@ while loop:
         print('Elige un capítulo manga de https://www.manhwas.net/ e introduce el enlace')
         print('Ejemplo "https://www.manhwas.net/leer/one-piece-1045.00"')
         print('Introduce la dirección URL del capítulo del manga:')
+        if open_browser == True:
+            webbrowser.open('https://www.manhwas.net/biblioteca?page=')
         chapter = input('URL ->')
         manga_download(chapter)
     elif choice == '3':
@@ -127,9 +133,19 @@ while loop:
         print('Elige un manga de https://www.manhwas.net/ e introduce el enlace')
         print('Ejemplo "https://www.manhwas.net/manga/one-piece"')
         print('Introduce la dirección URL del manga:')
+        if open_browser == True:
+            webbrowser.open('https://www.manhwas.net/biblioteca?page=')
         chapter_index = input('URL ->')
         download_collection(chapter_index)
     elif choice == '4':
+        print(f'Has seleccionado la opción {choice}.')
+        if open_browser == True:
+            open_browser = False
+        else:
+            open_browser = True
+        print(f'Se ha configurado el navegador en {open_browser}.')
+
+    elif choice == '5':
         exit()
     else:
         print("Opción no válida, vuelve a intentarlo ..")

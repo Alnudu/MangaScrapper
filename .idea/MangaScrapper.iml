@@ -9,5 +9,8 @@
   </component>
   <component name="PackageRequirementsSettings">
     <option name="requirementsPath" value="C:\Users\thermal\PycharmProjects\MangaScrapper\requirements.txt" />
+    <option name="removeUnused" value="true" />
+    <option name="modifyBaseFiles" value="true" />
+    <option name="keepMatchingSpecifier" value="false" />
   </component>
 </module>
