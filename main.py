@@ -1,13 +1,14 @@
 import os
 import requests
 from bs4 import BeautifulSoup as bs
+from alive_progress import alive_bar
 
 ## CONFIGURACION ##
 path_save_dir = "C:\MangaScrapper"  # Ejemplo de ruta c:\test
 ## ARRAYS COMUNES ##
 manga_chapters_links = []
 
-
+from alive_progress import alive_it
 def manga_site_scan():
     page = 1
     all_manga_titles = []
@@ -47,25 +48,26 @@ def manga_download(chapter):
     chapter_title = title.text.strip()
     print(f'Iniciando descarga de {chapter_number}')
     for img in chapter_img:
-        manga_chapters_imgs.extend(chapter_img)
-    try:
-        os.makedirs(f'{path_save_dir}\{chapter_title}\{chapter_number}')
-    except FileExistsError:
-        pass
-    f = open(f'{path_save_dir}\{chapter_title}\{chapter_number}\{img_number}.jpg', 'wb')
-    print(f'Descargando página {img_number} ...')
-    img_number = img_number + 1
-    f.write(requests.get(img).content)
-    f.close()
+       manga_chapters_imgs.extend(chapter_img)
+       try:
+           os.makedirs(f'{path_save_dir}\{chapter_title}\{chapter_number}')
+       except FileExistsError:
+          pass
+       f = open(f'{path_save_dir}\{chapter_title}\{chapter_number}\{img_number}.jpg', 'wb')
+       print(f'Descargando página {img_number} ...')
+       img_number = img_number + 1
+       f.write(requests.get(img).content)
+       f.close()
     print(f'Capitulo {chapter_number} descargado .')
     return
 
 
 def download_collection(chapter_index):
     get_manga_links(chapter_index)
-    for chapter in manga_chapters_links:
+    with alive_bar(len(manga_chapters_links)) as bar:
+     for chapter in manga_chapters_links:
         manga_download(chapter)
-    # Limpiamos los arrays al terminar el bucle.
+        bar()
     manga_chapters_links.clear()
     print('Se han descargado todos lo capitulos disponibles.')
     return
