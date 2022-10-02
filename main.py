@@ -10,7 +10,7 @@ open_browser = True
 ## ARRAYS COMUNES ##
 manga_chapters_links = []
 
-from alive_progress import alive_it
+
 def manga_site_scan():
     page = 1
     all_manga_titles = []
@@ -33,7 +33,7 @@ def manga_site_scan():
         print(page)
     for element in all_manga_titles:
         all_manga.append(element.strip())
-
+        
     return
 
 
@@ -144,7 +144,6 @@ while loop:
         else:
             open_browser = True
         print(f'Se ha configurado el navegador en {open_browser}.')
-
     elif choice == '5':
         exit()
     else:
