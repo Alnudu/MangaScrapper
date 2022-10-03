@@ -1,13 +1,17 @@
 import os
+from pickle import TRUE
+import sys
 import time
+import webbrowser
 import requests
+
 from bs4 import BeautifulSoup as bs
 from alive_progress import alive_bar
-import webbrowser
+
 
 ## CONFIGURACION ##
-path_save_dir = "C:\MangaScrapper"
-open_browser = True
+PATH_SAVE_DIR = "C:\MangaScrapper"
+OPEN_BROWSER = True
 ## ARRAYS COMUNES ##
 manga_chapters_links = []
 
@@ -34,7 +38,6 @@ def manga_site_scan():
         print(page)
     for element in all_manga_titles:
         all_manga.append(element.strip())
-        
     return
 
 
@@ -43,31 +46,32 @@ def manga_download(chapter):
     url = chapter
     img_number = 1
     try:
-            r = requests.get(url)
-            soup = bs(r.content, "html.parser")
-            chapter_img = [img["src"] for img in soup.select(".reading-content img")]
-            chapter_number = soup.find('h1').text
-            title = soup.select_one(
-            'div.entry-header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ol:nth-child(1) > li:nth-child(3) > a:nth-child(1)')
-            chapter_title = title.text.strip()
+        r = requests.get(url)
+        soup = bs(r.content, "html.parser")
+        chapter_img = [img["src"] for img in soup.select(".reading-content img")]
+        chapter_number = soup.find('h1').text
+        title = soup.select_one(
+        'div.entry-header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ol:nth-child(1) > li:nth-child(3) > a:nth-child(1)')
+        chapter_title = title.text.strip()
     except:
-            print ('La url que has introducido no parece correcta, por favor revísalo.')
-            time.sleep(3)
-            return
+        print ('La url que has introducido no parece correcta, por favor revísalo.')
+        time.sleep(3)
+        return
     else:
         print(f'Iniciando descarga de {chapter_number}')
     for img in chapter_img:
-       manga_chapters_imgs.extend(chapter_img)
-       try:
-           os.makedirs(f'{path_save_dir}\{chapter_title}\{chapter_number}')
-       except FileExistsError:
-          pass
-       f = open(f'{path_save_dir}\{chapter_title}\{chapter_number}\{img_number}.jpg', 'wb')
-       print(f'Descargando página {img_number} ...')
-       img_number = img_number + 1
-       f.write(requests.get(img).content)
-       f.close()
+        manga_chapters_imgs.extend(chapter_img)
+        try:
+            os.makedirs(f'{PATH_SAVE_DIR}\{chapter_title}\{chapter_number}')
+        except FileExistsError:
+            pass
+        with open(f'{PATH_SAVE_DIR}\{chapter_title}\{chapter_number}\{img_number}.jpg', 'wb') as file_handle:
+            print(f'Descargando página {img_number} ...')
+            file_handle.write(requests.get(img).content)
+            file_handle.close()
+            img_number = img_number + 1
     print(f'Capitulo {chapter_number} descargado .')
+    time.sleep(3)
     return
 
 
@@ -97,21 +101,20 @@ def get_manga_links(chapter_index):
     return
 
 
-logo = ''''                                                                                                                                                                                                                                                                      
+LOGO = ''''                                                                                                                                                                                                                                                                      
 ███╗   ███╗ █████╗ ███╗   ██╗ ██████╗  █████╗     ███████╗ ██████╗██████╗  █████╗ ██████╗ ██████╗ ███████╗██████╗ 
 ████╗ ████║██╔══██╗████╗  ██║██╔════╝ ██╔══██╗    ██╔════╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗
 ██╔████╔██║███████║██╔██╗ ██║██║  ███╗███████║    ███████╗██║     ██████╔╝███████║██████╔╝██████╔╝█████╗  ██████╔╝
 ██║╚██╔╝██║██╔══██║██║╚██╗██║██║   ██║██╔══██║    ╚════██║██║     ██╔══██╗██╔══██║██╔═══╝ ██╔═══╝ ██╔══╝  ██╔══██╗
 ██║ ╚═╝ ██║██║  ██║██║ ╚████║╚██████╔╝██║  ██║    ███████║╚██████╗██║  ██║██║  ██║██║     ██║     ███████╗██║  ██║
 ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝     ╚══════╝╚═╝  ╚═╝
-                                                                                                                  '''''
-
+'''''
 
 def print_menu():
-    print(logo)
+    print(LOGO)
     print('| https://www.manhwas.net | SCRAPPER')
-    print(f'| Directorio de descargas | {path_save_dir}')
-    print(f'| Navegador URL | {open_browser}')
+    print(f'| Directorio de descargas | {PATH_SAVE_DIR}')
+    print(f'| Navegador URL | {OPEN_BROWSER}')
     print(
         30 * "-", "MENU", 30 * "-")
     print("1. Modificar directorio de descargas.")
@@ -122,21 +125,21 @@ def print_menu():
     print(67 * "-")
 
 
-loop = True
+LOOP = True
 
-while loop:
+while LOOP:
     print_menu()
     choice = input("Introduce tu elección [1-5]: ")
     if choice == '1':
         print(f'Has seleccionado la opción {choice}.')
-        print('Introduce tu ruta de descargas\nEjemplo C:\Descargas\Manga\ ')
-        path_save_dir = input()
+        print('Introduce tu ruta de descargas \nEjemplo C:\Descargas\Manga\ ')
+        PATH_SAVE_DIR = input()
     elif choice == '2':
         print(f'Has seleccionado la opción {choice}.')
         print('Elige un capítulo manga de https://www.manhwas.net/ e introduce el enlace')
         print('Ejemplo "https://www.manhwas.net/leer/one-piece-1045.00"')
         print('Introduce la dirección URL del capítulo del manga:')
-        if open_browser == True:
+        if OPEN_BROWSER is True:
             webbrowser.open('https://www.manhwas.net/biblioteca?page=')
         chapter = input('URL ->')
         manga_download(chapter)
@@ -145,21 +148,22 @@ while loop:
         print('Elige un manga de https://www.manhwas.net/ e introduce el enlace')
         print('Ejemplo "https://www.manhwas.net/manga/one-piece"')
         print('Introduce la dirección URL del manga:')
-        if open_browser == True:
+        if OPEN_BROWSER is True:
             webbrowser.open('https://www.manhwas.net/biblioteca?page=')
         chapter_index = input('URL ->')
         download_collection(chapter_index)
     elif choice == '4':
         print(f'Has seleccionado la opción {choice}.')
-        if open_browser == True:
-            open_browser = False
+        if OPEN_BROWSER is True:
+            OPEN_BROWSER = False
         else:
-            open_browser = True
-        print(f'Se ha configurado el navegador en {open_browser}.')
+            OPEN_BROWSER = True
+        print(f'Se ha configurado el navegador en {OPEN_BROWSER}.')
     elif choice == '5':
-        exit()
+        sys.exit()
     else:
         print("Opción no válida, vuelve a intentarlo ..")
 
 if __name__ == "__main__":
     print_menu()
+    
